@@ -14,6 +14,7 @@ import ReportsPage from "@/pages/ReportsPage";
 import ConflictsPage from "@/pages/ConflictsPage";
 import FacultyDashboard from "@/pages/FacultyDashboard";
 import LoginPage from "@/pages/LoginPage";
+import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "@/context/AuthContext";
@@ -31,6 +32,7 @@ const App = () => (
             <Routes>
               {/* Public Route */}
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
 
               {/* Protected Routes Wrapper */}
               <Route element={<ProtectedRoute />}>

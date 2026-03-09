@@ -12,6 +12,7 @@ export default function LoginPage() {
     const location = useLocation();
 
     const [isSignUp, setIsSignUp] = useState(false);
+    const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [fullName, setFullName] = useState('');
@@ -19,8 +20,35 @@ export default function LoginPage() {
 
     const from = location.state?.from?.pathname || '/';
 
+    const handleResetRequest = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!email) {
+            toast.error('Please enter your email address');
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/reset-password`,
+            });
+            if (error) throw error;
+            toast.success('Password reset link sent! Please check your email.');
+            setIsForgotPassword(false);
+        } catch (err: any) {
+            toast.error(err.message || 'Failed to send reset link.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (isForgotPassword) {
+            handleResetRequest(e);
+            return;
+        }
+
         if (!email || !password || (isSignUp && !fullName)) {
             toast.error('Please fill in all required fields');
             return;
@@ -122,25 +150,34 @@ export default function LoginPage() {
                                 </div>
                             </div>
 
-                            <div className="space-y-2.5">
-                                <div className="flex items-center justify-between px-1">
-                                    <Label htmlFor="password" className="text-[11px] font-bold text-muted-foreground/70 uppercase tracking-widest">Master Password</Label>
-                                    {!isSignUp && <span className="text-[10px] font-bold text-primary/70 hover:text-primary hover:underline cursor-pointer transition-colors uppercase tracking-wider">Forgot?</span>}
+                            {!isForgotPassword && (
+                                <div className="space-y-2.5">
+                                    <div className="flex items-center justify-between px-1">
+                                        <Label htmlFor="password" className="text-[11px] font-bold text-muted-foreground/70 uppercase tracking-widest">Master Password</Label>
+                                        {!isSignUp && (
+                                            <span
+                                                onClick={() => setIsForgotPassword(true)}
+                                                className="text-[10px] font-bold text-primary/70 hover:text-primary hover:underline cursor-pointer transition-colors uppercase tracking-wider"
+                                            >
+                                                Forgot?
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="relative group/input">
+                                        <Lock className="absolute left-4 top-3.5 h-5 w-5 text-muted-foreground/40 group-focus-within/input:text-primary transition-colors" />
+                                        <Input
+                                            id="password"
+                                            type="password"
+                                            placeholder="••••••••"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            className="pl-12 bg-white/5 border-white/5 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 h-12 rounded-xl transition-all font-medium text-foreground placeholder:text-muted-foreground/30"
+                                            disabled={isLoading}
+                                            autoComplete={isSignUp ? "new-password" : "current-password"}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="relative group/input">
-                                    <Lock className="absolute left-4 top-3.5 h-5 w-5 text-muted-foreground/40 group-focus-within/input:text-primary transition-colors" />
-                                    <Input
-                                        id="password"
-                                        type="password"
-                                        placeholder="••••••••"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="pl-12 bg-white/5 border-white/5 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 h-12 rounded-xl transition-all font-medium text-foreground placeholder:text-muted-foreground/30"
-                                        disabled={isLoading}
-                                        autoComplete={isSignUp ? "new-password" : "current-password"}
-                                    />
-                                </div>
-                            </div>
+                            )}
                         </div>
 
                         <div className="pt-2">
@@ -155,25 +192,40 @@ export default function LoginPage() {
                                         <span>PROCESSING</span>
                                     </div>
                                 ) : (
-                                    <span>{isSignUp ? 'REGISTER ACCOUNT' : 'SECURE SIGN IN'}</span>
+                                    <span>
+                                        {isForgotPassword ? 'SEND RESET LINK' : (isSignUp ? 'REGISTER ACCOUNT' : 'SECURE SIGN IN')}
+                                    </span>
                                 )}
                             </Button>
                         </div>
 
                         <div className="text-center">
-                            <button
-                                type="button"
-                                onClick={() => setIsSignUp(!isSignUp)}
-                                className="group/btn inline-flex items-center gap-2 hover:translate-y-[-1px] transition-transform"
-                                disabled={isLoading}
-                            >
-                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest group-hover/btn:text-foreground transition-colors">
-                                    {isSignUp ? "Already secured?" : "Not onboarded?"}
-                                </span>
-                                <span className="text-[11px] font-black text-primary uppercase tracking-widest group-hover/btn:underline flex items-center gap-1.5">
-                                    {isSignUp ? "SIGN IN" : <>ORGANIZE NOW <UserPlus size={12} className="mt-[-1px]" /></>}
-                                </span>
-                            </button>
+                            {isForgotPassword ? (
+                                <button
+                                    type="button"
+                                    onClick={() => setIsForgotPassword(false)}
+                                    className="group/btn inline-flex items-center gap-2 hover:translate-y-[-1px] transition-transform"
+                                    disabled={isLoading}
+                                >
+                                    <span className="text-[11px] font-black text-primary uppercase tracking-widest group-hover/btn:underline flex items-center gap-1.5">
+                                        Back to Login
+                                    </span>
+                                </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => setIsSignUp(!isSignUp)}
+                                    className="group/btn inline-flex items-center gap-2 hover:translate-y-[-1px] transition-transform"
+                                    disabled={isLoading}
+                                >
+                                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest group-hover/btn:text-foreground transition-colors">
+                                        {isSignUp ? "Already secured?" : "Not onboarded?"}
+                                    </span>
+                                    <span className="text-[11px] font-black text-primary uppercase tracking-widest group-hover/btn:underline flex items-center gap-1.5">
+                                        {isSignUp ? "SIGN IN" : <>ORGANIZE NOW <UserPlus size={12} className="mt-[-1px]" /></>}
+                                    </span>
+                                </button>
+                            )}
                         </div>
                     </form>
                 </div>
