@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Rich, creamy light mode background */
+    --background: 210 33% 99%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Vibrant, deep indigo primary */
+    --primary: 243 75% 59%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 214 32% 91%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 214 32% 91%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Vivid amber accent */
+    --accent: 38 92% 50%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 348 83% 47%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 243 75% 59%;
+
+    --radius: 0.75rem;
+
+    --success: 142 71% 45%;
+    --success-foreground: 210 40% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 11%;
+
+    /* Sleek, deep dark sidebar for contrast in light mode */
+    --sidebar-background: 228 24% 12%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 243 75% 59%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 228 20% 18%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 228 20% 18%;
+    --sidebar-ring: 243 75% 59%;
+  }
+
+  .dark {
+    /* Extremely deep, premium obsidian dark mode */
+    --background: 230 15% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 230 15% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 230 15% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Glowing violet-indigo primary */
+    --primary: 250 89% 65%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 230 15% 18%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 230 15% 18%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Electric amber accent */
+    --accent: 43 96% 56%;
+    --accent-foreground: 230 15% 8%;
+
+    --destructive: 348 83% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 230 15% 20%;
+    --input: 230 15% 20%;
+    --ring: 250 89% 65%;
+
+    /* Slightly lighter sidebar for depth differentiation */
+    --sidebar-background: 230 15% 10%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 250 89% 65%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 230 15% 16%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 230 15% 16%;
+    --sidebar-ring: 250 89% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased text-slate-800 dark:text-slate-200 selection:bg-primary/30;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply tracking-tight;
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-card/60 backdrop-blur-xl border border-white/20 dark:border-white/5 shadow-xl;
+  }
+
+  .glass-sidebar {
+    @apply bg-sidebar/80 backdrop-blur-2xl border-r border-white/10 dark:border-white/5 shadow-2xl;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10;
+  }
+
+  /* Custom animated background gradient */
+  .bg-app-gradient {
+    @apply bg-fixed;
+    background-image: radial-gradient(at 0% 0%, hsla(243, 75%, 59%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(38, 92%, 50%, 0.08) 0px, transparent 50%);
+  }
+
+  .dark .bg-app-gradient {
+    background-image: radial-gradient(at 0% 0%, hsla(250, 89%, 65%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(43, 96%, 56%, 0.12) 0px, transparent 50%);
+  }
+}
+
+@media print {
+
+  .no-print,
+  aside,
+  header,
+  button,
+  nav,
+  .glass-sidebar,
+  [role="combobox"],
+  .lucide-printer,
+  .lucide-database,
+  .lucide-log-out {
+    display: none !important;
+  }
+
+  body,
+  html {
+    background: white !important;
+    color: #000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: auto !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    display: block !important;
+  }
+
+  .glass-card {
+    background: white !important;
+    border: 1px solid #eee !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    color: black !important;
+    padding: 1.5rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .bg-app-gradient {
+    background: none !important;
+  }
+
+  /* Ensure text is black and readable */
+  h1,
+  h2,
+  h3,
+  h4,
+  .text-foreground,
+  .text-muted-foreground {
+    color: #000 !important;
+  }
+
+  /* Specific fixes for FacultyDashboard timeline */
+  .relative.flex.gap-6.group {
+    background: white !important;
+    border-bottom: 1px solid #eee !important;
+    padding-bottom: 1rem !important;
+    margin-bottom: 1rem !important;
+    page-break-inside: avoid;
+  }
+
+  .before\:absolute.before\:left-\[45px\] {
+    display: none !important;
+    /* Hide timeline line on print if it looks messy */
+  }
+
+  /* Force background colors to print for badges */
+  .bg-primary\/10,
+  .bg-amber-500\/10,
+  .bg-emerald-500\/10,
+  .bg-rose-500\/10 {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background-color: #f3f4f6 !important;
+    /* Fallback to light gray */
+    border: 1px solid #ccc !important;
+  }
+
+  /* Ensure text stands out in badges */
+  .text-primary,
+  .text-amber-500,
+  .text-emerald-500,
+  .text-rose-500 {
+    font-weight: bold !important;
+    color: #000 !important;
+  }
+
+  /* Formal Table Styles for Print */
+  .print-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 2rem !important;
+    table-layout: auto !important;
+  }
+
+  .print-table th,
+  .print-table td {
+    border: 0.5pt solid #333 !important;
+    padding: 10px 14px !important;
+    text-align: left !important;
+    font-size: 12px !important;
+    color: black !important;
+  }
+
+  .print-table th {
+    background-color: #f0f0f0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+  }
+
+  .print-hidden,
+  .relative.flex.gap-6.group,
+  .grid.grid-cols-1.sm\:grid-cols-3.gap-4 {
+    display: none !important;
+  }
+}
